@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 filelocation = "images/kaki.jpg", "images/icaru.jpg"
-unit_list = []
+unit_list = [] #list
 
 for j in range(len(filelocation)):
     full_image =Image.open(filelocation[j])
@@ -32,10 +32,8 @@ for j in range(len(filelocation)):
     #remove first element, thinks element is a symbol
     del textlist[0]
 
-    unitstats = (j,)
-
     #put information in a tuple
-
+    unitstats = ()
     unitstats = unitstats + (textlist[0],)
     for i in range(len(textlist)):
         match textlist[i]:
@@ -70,37 +68,33 @@ for j in range(len(filelocation)):
     unit_list.append(unitstats)
 
 title_list = [
-    "Number",       #0
-    "Name",         #1          
-    "Current Level",#2
-    "Max Level",    #3
-    "Type",         #4
-    "HP",           #5
-    "HP+",          #6
-    "ATK",          #7
-    "ATK+",         #8
-    "DEF",          #9
-    "DEF+",         #10
-    "SPD",          #11
-    "SPD+",         #12
-    "CRI Rate",     #13
-    "CRI Dmg",      #14
-    "Resistance",   #15
-    "Accuracy"      #16
+    "Name",         #0          
+    "Current Level",#1
+    "Max Level",    #2
+    "Type",         #3
+    "HP",           #4
+    "HP+",          #5
+    "ATK",          #6
+    "ATK+",         #7
+    "DEF",          #8
+    "DEF+",         #9
+    "SPD",          #10
+    "SPD+",         #11
+    "CRI Rate",     #12
+    "CRI Dmg",      #13
+    "Resistance",   #14
+    "Accuracy"      #15
 ]
-
 
 print(unit_list)
 
-
+#print out the info
 for i in range(len(unit_list)):
     print("-----------------")
     for j in range(len(unit_list[i])):
         print(str(title_list[j]) + ": " + str(unit_list[i][j]))
 
-    # for i in range(len(stat_list[j])):
-    #     print(title_list[i] + ": " + stat_list[j][i])
+final_data = pd.DataFrame.from_records(unit_list,columns=title_list)
+print(final_data)
 
-    # df = pd.DataFrame(stat_dict, index=[0])
-
-    # print(df)
+final_data.to_csv("data.csv", index=False)
