@@ -2,32 +2,35 @@ from PIL import Image
 import pytesseract as pt
 import numpy as np
 import pandas as pd
+import os
 
-filelocation = "images/kaki.jpg", "images/icaru.jpg"
+directory = os.fsencode("images/")
 unit_list = [] #list
 
-for j in range(len(filelocation)):
-    full_image =Image.open(filelocation[j])
+for file in os.listdir(directory):
+    filename = os.fsdecode(directory) + os.fsdecode(file)
+
+    full_image = Image.open(filename)
     #crop image
     w, h = full_image.size
     #take off the left two thirds
-    left = w * 2/3 - 50
+    left = w - 800 
     #keep the upper  5/6
-    bottom = h * 5/6
+    bottom = h - 245
     #take off the top 1/8
-    top = h * 1/8
+    top = 50
+
 
     cropped_image = full_image.crop((left, top, w, bottom))
-    #cropped_image.show()
+    # cropped_image.show()
 
-    file = np.array(cropped_image)
+    image_array = np.array(cropped_image)
     #get the text out of the image
-    text = pt.image_to_string(file)
+    text = pt.image_to_string(image_array)
 
     #split up all the text in the file
     textlist = text.split()
-    print("text list")
-    print(textlist)
+    # print(textlist)
 
     #remove first element, thinks element is a symbol
     del textlist[0]
@@ -86,15 +89,13 @@ title_list = [
     "Accuracy"      #15
 ]
 
-print(unit_list)
-
 #print out the info
-for i in range(len(unit_list)):
-    print("-----------------")
-    for j in range(len(unit_list[i])):
-        print(str(title_list[j]) + ": " + str(unit_list[i][j]))
+# for i in range(len(unit_list)):
+#     print("-----------------")
+#     for j in range(len(unit_list[i])):
+#         print(str(title_list[j]) + ": " + str(unit_list[i][j]))
 
 final_data = pd.DataFrame.from_records(unit_list,columns=title_list)
 print(final_data)
 
-final_data.to_csv("data.csv", index=False)
+final_data.to_excel("data.xlsx", sheet_name="units",index=False)
