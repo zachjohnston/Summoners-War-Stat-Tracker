@@ -41,7 +41,7 @@ for file in os.listdir(directory):
     while looping:
         for i in range(len(textlist)):
             if ("@" in textlist[i] or "©" in textlist[i] or "B"  in textlist[i] or "®"  in textlist[i]) and len(unitstats) == 0: 
-                unitstats = unitstats + (textlist[i+1],)
+                unitstats = unitstats + (textlist[i+1].capitalize(),)
             match textlist[i]:
                 case "Level" if len(unitstats) == 1:
                     print(textlist[i])
@@ -131,7 +131,10 @@ title_list_2 = [
 final_data_1 = pd.DataFrame.from_records(unit_list,columns=title_list_1)
 print(final_data_1)
 
-final_data_1.to_excel("data.xlsx", sheet_name="units",index=False)
+#check if the file exists and delete it
+if os.path.exists("data.xlsx"):
+    os.remove("data.xlsx")
+final_data_1.to_excel("data.xlsx",index=False)
 
 #want another sheet that has total hp, atk, def, spd, cri dmg, EHP with towers factored in
 
