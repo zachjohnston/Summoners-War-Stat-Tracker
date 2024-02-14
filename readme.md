@@ -1,7 +1,7 @@
 ## Current Functionalities
 - main.py will read through any images placed in the "images" folder
 - It will read all of the stats and put them into a Python pandas dataframe
-- The dataframe is turned into an excel spreadsheet that can be saved by the user
+- The dataframe is turned into an Excel spreadsheet that can be saved by the user
 - Running main.py will also overwrite any existing data in data.xlsx
 
 ## To Do List:
