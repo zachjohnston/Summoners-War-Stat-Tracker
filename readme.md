@@ -7,3 +7,5 @@
 
 ## Current Issues
 - Certain data points are read incorrectly
+- Fixed by addressing all the cases I've run into
+- Need a way to fix it properly

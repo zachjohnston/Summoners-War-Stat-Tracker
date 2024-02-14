@@ -10,7 +10,6 @@ unit_list = [] #list
 
 for file in os.listdir(directory):
     filename = os.fsdecode(directory) + os.fsdecode(file)
-
     full_image = Image.open(filename)
     #crop image
     w, h = full_image.size
@@ -31,52 +30,65 @@ for file in os.listdir(directory):
 
     #split up all the text in the file
     textlist = text.split()
-    # print(textlist)
+    print(textlist)
 
-    #remove first element, thinks element is a symbol
-    del textlist[0]
 
     #put information in a tuple
     unitstats = ()
-    unitstats = unitstats + (textlist[0],) #name
-    for i in range(len(textlist)):
-        match textlist[i]:
-            case "Level":
-                try:
-                    int(textlist[i+1]) #checks if it's 40 (int) or 40/40 (str)
-                except: #read the value wrong
-                    lvl = textlist[i+1].split('/') 
-                    unitstats = unitstats + (lvl[0],)
-                    unitstats = unitstats + (lvl[1],)
-                    unitstats = unitstats + (textlist[i+2],) 
-                else: #read the value correctly   
-                    unitstats = unitstats + (textlist[i+1],) #current level
-                    unitstats = unitstats + (textlist[i+3],) #max level
-                    unitstats = unitstats + (textlist[i+4],) #type
-            case "HP":
-                unitstats = unitstats + (textlist[i+1],) #hp
-                unitstats = unitstats + (textlist[i+2].strip('+'),) #+hp
-            case "ATK":
-                unitstats = unitstats + (textlist[i+1],) #atk
-                unitstats = unitstats + (textlist[i+2].strip('+'),) #+atk
-            case "DEF":
-                unitstats = unitstats + (textlist[i+1],) #def
-                unitstats = unitstats + (textlist[i+2].strip('+'),) #+def
-            case "SPD":
-                unitstats = unitstats + (textlist[i+1],) #spd
-                unitstats = unitstats + (textlist[i+2].strip('+'),) #+spd
-            case "CRI":
-                if textlist[i+1] == "Rate":
-                    unitstats = unitstats + (textlist[i+2],) #cri rate
-                elif textlist[i+1] == "Dmg":
-                    unitstats = unitstats + (textlist[i+2],) #cri dmg
-            case "Resistance":
-                unitstats = unitstats + (textlist[i+1],) #resistance
-            case "Accuracy":
-                unitstats = unitstats + (textlist[i+1],) #accuracy
-    #add unit to full list
-    # print(unitstats)
-    unit_list.append(unitstats)
+    looping = True
+    errorchecker = 0
+    #unitstats = unitstats + (textlist[0],) #name
+    while looping:
+        for i in range(len(textlist)):
+            if ("@" in textlist[i] or "©" in textlist[i] or "B"  in textlist[i] or "®"  in textlist[i]) and len(unitstats) == 0: 
+                unitstats = unitstats + (textlist[i+1],)
+            match textlist[i]:
+                case "Level" if len(unitstats) == 1:
+                    print(textlist[i])
+                    print(textlist[i+1])
+                    try:
+                        int(textlist[i+1]) #checks if it's 40 (int) or 40/40 (str)
+                    except: #read the value wrong
+                        print("value read wrong")
+                        lvl = textlist[i+1].split('/') 
+                        unitstats = unitstats + (lvl[0],)
+                        unitstats = unitstats + (lvl[1],)
+                        unitstats = unitstats + (textlist[i+2],) 
+                    else: #read the value correctly   
+                        unitstats = unitstats + (textlist[i+1],) #current level
+                        unitstats = unitstats + (textlist[i+3],) #max level
+                        unitstats = unitstats + (textlist[i+4],) #type
+                case "HP" if len(unitstats) == 4:
+                    unitstats = unitstats + (textlist[i+1],) #hp
+                    unitstats = unitstats + (textlist[i+2].strip('+'),) #+hp
+                case "ATK" if len(unitstats) == 6:
+                    unitstats = unitstats + (textlist[i+1],) #atk
+                    unitstats = unitstats + (textlist[i+2].strip('+'),) #+atk
+                case "DEF" if len(unitstats) == 8:
+                    unitstats = unitstats + (textlist[i+1],) #def
+                    unitstats = unitstats + (textlist[i+2].strip('+'),) #+def
+#---------------ERROR CASE---------------------------
+                case "Dag" if len(unitstats) == 8:
+                    unitstats = unitstats + (textlist[i+1],) #def
+                    unitstats = unitstats + (textlist[i+2].strip('+'),) #+def                    
+#----------------------------------------------------                
+                case "SPD" if len(unitstats) == 10:
+                    unitstats = unitstats + (textlist[i+1],) #spd
+                    unitstats = unitstats + (textlist[i+2].strip('+'),) #+spd
+                case "CRI" if len(unitstats) == 12 or len(unitstats) == 13:
+                    if textlist[i+1] == "Rate":
+                        unitstats = unitstats + (textlist[i+2],) #cri rate
+                    elif textlist[i+1] == "Dmg":
+                        unitstats = unitstats + (textlist[i+2],) #cri dmg
+                case "Resistance" if len(unitstats) == 14:
+                    unitstats = unitstats + (textlist[i+1],) #resistance
+                case "Accuracy" if len(unitstats) == 15:
+                    unitstats = unitstats + (textlist[i+1],) #accuracy
+                    looping = False 
+                    unit_list.append(unitstats)      
+        #add unit to full list
+        print(unitstats)
+        
 
 #titles of the columns in sheet 1
 title_list_1 = [
@@ -122,3 +134,4 @@ print(final_data_1)
 final_data_1.to_excel("data.xlsx", sheet_name="units",index=False)
 
 #want another sheet that has total hp, atk, def, spd, cri dmg, EHP with towers factored in
+
