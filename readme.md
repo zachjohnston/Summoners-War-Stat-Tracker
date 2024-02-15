@@ -15,4 +15,3 @@
 - Certain data points are read incorrectly, specifically names. Example: L's read as t's, q's read as g's. Especially problematic when a title is read incorrectly. Example: Def read as Dag.
 - Fixed by addressing all the cases I've run into
 - Need a way to fix it properly
-

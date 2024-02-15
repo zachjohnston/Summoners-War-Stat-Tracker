@@ -41,10 +41,10 @@ title_list_2 = [
 ]
 #process the images into lists of strings
 images = utils.read_and_process_images(directory)
-full_text_list = utils.imgtostring(images)
+full_text_list = utils.imgtostring(images, 1)
 
-for textlist in full_text_list:
-    print(textlist)
+
+for textlist in full_text_list[0]:
     #put information in a tuple
     unitstats = ()
     looping = True
@@ -104,6 +104,7 @@ for textlist in full_text_list:
                 case "Accuracy" if len(unitstats) == 15:
                     errorchecker = 0                    
                     unitstats = unitstats + (textlist[i+1],) #accuracy
+            print(errorchecker)
             errorchecker += 1   
             if errorchecker == 20:
                 errorchecker = 0
@@ -119,6 +120,7 @@ for textlist in full_text_list:
 #turn the the list of tuples into a pandas dataframe
 final_data_1 = pd.DataFrame.from_records(unit_list,columns=title_list_1)
 print(final_data_1)
+print(str(full_text_list[1]) + " image(s) could not be read.")
 
 #check if the file exists and delete it
 if os.path.exists("data.xlsx"):

@@ -20,12 +20,18 @@ def crop_image(image):
     image = image.crop((left,top,w,bottom))
     return image
 
-def imgtostring(images):
+def imgtostring(images, verbose):
     textlist = []
+    notread = 0
     for image in images:
         image_array = np.array(image)
         text = pt.image_to_string(image_array)
         text = text.split()
-        textlist.append(text)
-    return textlist
+        if len(text) > 20:
+            textlist.append(text)
+        else:
+            notread+=1
+        if verbose:
+            print(text)
+    return textlist, notread
 
